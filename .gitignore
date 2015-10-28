@@ -1,1 +1,6 @@
+*
+
+!.gitignore
+!HOG.cpp
+!CMakeLists.txt
 
