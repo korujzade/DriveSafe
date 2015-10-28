@@ -1,3 +1,8 @@
+// This files takes positives and negatives images from respective folders and create feature descriptor values
+// of them and save them to pos.xml and neg.xml files
+
+
+
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/ml/ml.hpp>
