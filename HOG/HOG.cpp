@@ -1,8 +1,3 @@
-// This files takes positives and negatives images from respective folders and create feature descriptor values
-// of them and save them to pos.xml and neg.xml files
-
-
-
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/ml/ml.hpp>
@@ -29,7 +24,7 @@ int main(int, char**)
 	vector <vector<float> > v_descriptors;
 	vector <vector<Point> > v_locations;
 
-	for(int i = 227; i <= imgNum; i++)
+	for(int i =1; i <= imgNum; i++)
 	{
 		if (i <= 9)
 		{
@@ -92,9 +87,6 @@ int main(int, char**)
 		v_descriptors.push_back(descriptors);
 		v_locations.push_back(locations);
 
-		imshow("test", img);
-
-		waitKey(50000);
 	}
 
 	FileStorage hogXML(posXML, FileStorage::WRITE);
@@ -120,7 +112,7 @@ int main(int, char**)
 
 	char negXML[100] = "neg.xml";
 
-	int negImgNum = 380;
+	int negImgNum = 66;
 
 	vector <vector<float> > v_descriptors_neg;
 	vector <vector<Point> > v_locations_neg; 
@@ -156,10 +148,6 @@ int main(int, char**)
 
 				v_descriptors_neg.push_back(descriptors);
 				v_locations_neg.push_back(locations);
-
-				imshow("neg", img);
-
-				waitKey(1);
 
 			}				
 		}
