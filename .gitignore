@@ -1,6 +1,9 @@
 *
 
 !.gitignore
-!HOG.cpp
+!HOG/hog.cpp
+!Main/Main.cpp
+!TestSVM/TestSVM.cpp
+!TrainSVM/TrainSVM.cpp
 !CMakeLists.txt
 
