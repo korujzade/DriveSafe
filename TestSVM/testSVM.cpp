@@ -22,7 +22,7 @@ struct pn
 // load trained svm xml
 Ptr<SVM> svm = StatModel::load<SVM>("../TrainSVM/trainedSVM.xml");
 
-pn testRecord(char folderName[100])
+pn testRecords(char folderName[100])
 {
 	DIR *dir;
     struct dirent *ent;
@@ -74,23 +74,22 @@ pn testRecord(char folderName[100])
 	  perror ("");
 	  return newpn;
 	}
-
 	return newpn;
 }
 
 int main(int, char**)
 {
-    pn pospn;
-    pn negpn;
-    
-    char folderName[100] = "testbikes";
-    char negfn[100] = "../HOG/training/none/";
+  pn pospn;
+  pn negpn;
 
-	pospn = testRecord(folderName);
-	negpn = testRecord(negfn);
+  char folderName[100] = "testbikes";
+  char negfn[100] = "../HOG/training/none/";
 
-    cout << "true positive results: " << pospn.p << endl;
-    cout << "false positive results: " << pospn.n << endl;
-    cout << "true positive results: " << negpn.n << endl;
-    cout << "false positive results: " << negpn.p << endl;
+	pospn = testRecords(folderName);
+	negpn = testRecords(negfn);
+
+  cout << "true positive results: " << pospn.p << endl;
+  cout << "false positive results: " << pospn.n << endl;
+  cout << "true positive results: " << negpn.n << endl;
+  cout << "false positive results: " << negpn.p << endl;
 }
