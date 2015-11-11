@@ -1,9 +1,11 @@
+!.gitignore
+!HOG/
+!Main/
+!TestSVM/
+!TrainSVM/
+!CMakeLists.txt
+!*.cpp
+
 *
 
-!.gitignore
-!HOG/hog.cpp
-!Main/Main.cpp
-!TestSVM/TestSVM.cpp
-!TrainSVM/TrainSVM.cpp
-!CMakeLists.txt
 
