@@ -13,50 +13,24 @@ using namespace cv;
 using namespace cv::ml;
 using namespace std;
 
+struct pn
+{
+	int p;
+	int n;
+};
+
 // load trained svm xml
-Ptr<SVM> svm = StatModel::load<SVM>("../trainsvm/trainedSVM.xml");
+Ptr<SVM> svm = StatModel::load<SVM>("../TrainSVM/trainedSVM.xml");
 
-int testRecord(char* fileName, char folderName[100])
+pn testRecord(char folderName[100])
 {
-	Mat grayImg;
-	char filen[100];
-	sprintf(filen, "%s/%s",folderName, fileName);
-	//cout << "name: " << filen << endl;
-	Mat img = imread(filen);
-
-	resize(img, img, Size(128,128));
-	cvtColor(img, grayImg, CV_RGB2GRAY);
-	HOGDescriptor hog(Size(128,128), Size(8,8), Size(4,4), Size(4,4), 9);
-	vector <float> descriptors;
-	vector <Point> locations;
-	hog.compute(grayImg, descriptors, Size(0,0), Size(0,0), locations);
-
-	Mat sampleMat = Mat(descriptors);
-
-	int cols = sampleMat.rows;
-	int rows = sampleMat.cols;
-	Mat newsampleMat(rows, cols, CV_32F);
-
-	Mat tmp = sampleMat.col(0);
-	copy(tmp.begin<float>(), tmp.end<float>(), newsampleMat.begin<float>());
-
-	int res = svm->predict(newsampleMat);
-
-	return res;
-
-}
-
-int main(int, char**)
-{
-
-    int tp = 0;
-    int tn = 0;
-    int fp = 0;
-    int fn = 0;
-
-    char folderName[100] = "testbikes";
-    DIR *dir;
+	DIR *dir;
     struct dirent *ent;
+
+	pn newpn;
+	newpn.p = 0;
+	newpn.n = 0;
+
 	if ((dir = opendir (folderName)) != NULL) 
 	{
 		while ((ent = readdir (dir)) != NULL) 
@@ -64,11 +38,33 @@ int main(int, char**)
 			if ( !strcmp(ent->d_name, ".") || !strcmp(ent->d_name, ".."));
 			else
 			{
-				int res = testRecord(ent->d_name, folderName);
+				Mat grayImg;
+				char filen[100];
+				sprintf(filen, "%s/%s",folderName, ent->d_name);
+				Mat img = imread(filen);
+
+				resize(img, img, Size(128,128));
+				cvtColor(img, grayImg, CV_RGB2GRAY);
+				HOGDescriptor hog(Size(128,128), Size(8,8), Size(4,4), Size(4,4), 9);
+				vector <float> descriptors;
+				vector <Point> locations;
+				hog.compute(grayImg, descriptors, Size(0,0), Size(0,0), locations);
+
+				Mat sampleMat = Mat(descriptors);
+
+				int cols = sampleMat.rows;
+				int rows = sampleMat.cols;
+				Mat newsampleMat(rows, cols, CV_32F);
+
+				Mat tmp = sampleMat.col(0);
+				copy(tmp.begin<float>(), tmp.end<float>(), newsampleMat.begin<float>());
+
+				int res = svm->predict(newsampleMat);
+
 				if (res == 1)
-					tp++;
+					newpn.p++;
 				if (res == 0)
-					fp++;
+					newpn.n++;
 			}
 		}
 		closedir (dir);
@@ -76,38 +72,25 @@ int main(int, char**)
 	else 
 	{
 	  perror ("");
-	  return EXIT_FAILURE;
+	  return newpn;
 	}
 
-    cout << "true positive results: " << tp << endl;
-    cout << "false positive results: " << fp << endl;
+	return newpn;
+}
 
-/////////////////////////// Negative Testing//////////////////////////////
+int main(int, char**)
+{
+    pn pospn;
+    pn negpn;
+    
+    char folderName[100] = "testbikes";
+    char negfn[100] = "../HOG/training/none/";
 
-    char negfolderName[100] = "../HOG/training/none";
-	if ((dir = opendir (negfolderName)) != NULL) 
-	{
-		while ((ent = readdir (dir)) != NULL) 
-		{
-			if ( !strcmp(ent->d_name, ".") || !strcmp(ent->d_name, ".."));
-			else
-			{
-				int res = testRecord(ent->d_name, negfolderName);
-				if (res == 0)
-					tn++;
-				if (res == 1)
-					fn++;
-			}
-		}
-		closedir (dir);
-	} 
-	else 
-	{
-	  perror ("");
-	  return EXIT_FAILURE;
-	}	
+	pospn = testRecord(folderName);
+	negpn = testRecord(negfn);
 
-    cout << "true negative results: " << tn << endl;
-    cout << "false negative results: " << fn << endl;	
-
+    cout << "true positive results: " << pospn.p << endl;
+    cout << "false positive results: " << pospn.n << endl;
+    cout << "true positive results: " << negpn.n << endl;
+    cout << "false positive results: " << negpn.p << endl;
 }
