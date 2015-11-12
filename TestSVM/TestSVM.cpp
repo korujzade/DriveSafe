@@ -25,7 +25,7 @@ Ptr<SVM> svm = StatModel::load<SVM>("../TrainSVM/trainedSVM.xml");
 pn testRecords(char folderName[100])
 {
 	DIR *dir;
-    struct dirent *ent;
+  struct dirent *ent;
 
 	pn newpn;
 	newpn.p = 0;
@@ -88,8 +88,13 @@ int main(int, char**)
 	pospn = testRecords(folderName);
 	negpn = testRecords(negfn);
 
+  float accuracy = (float)((pospn.p + negpn.n))/(float)((pospn.p + pospn.n + negpn.n + negpn.p));
+
   cout << "true positive results: " << pospn.p << endl;
   cout << "false positive results: " << pospn.n << endl;
-  cout << "true positive results: " << negpn.n << endl;
-  cout << "false positive results: " << negpn.p << endl;
+  cout << "true negative results: " << negpn.n << endl;
+  cout << "false negative results: " << negpn.p << endl;
+
+  
+  cout << "accuracy: " << accuracy << endl;
 }
