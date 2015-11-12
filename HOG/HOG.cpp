@@ -32,11 +32,6 @@ int main(int, char**)
 	vector<string> annotation_files = files(annotation_path);
 	vector<string> neg_files = files(neg_path);
 
-	// path to each file
-
-
-	string path_to_neg_file;
-
 	// xml files to keep descriptor values
 	string posXML = "pos.xml";
 	string negXML = "neg.xml";
@@ -95,7 +90,7 @@ int main(int, char**)
 	// extract descriptor values for negative images
 	for (uint i = 0; i < neg_files.size(); i++)
 	{
-		path_to_neg_file = neg_path + neg_files[i];
+		string path_to_neg_file = neg_path + neg_files[i];
 		Mat img = imread(path_to_neg_file);
 
 		// find descriptor values of images
