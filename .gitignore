@@ -1,7 +1,7 @@
 *
 !.gitignore
 !HOG/
-!HOG/
+!HOG2/
 !Main/
 !TestSVM/
 !TrainSVM/
