@@ -1,4 +1,6 @@
+*
 !.gitignore
+!HOG/
 !HOG/
 !Main/
 !TestSVM/
@@ -6,6 +8,5 @@
 !CMakeLists.txt
 !*.cpp
 
-*
 
 

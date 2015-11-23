@@ -23,9 +23,9 @@ void releaseHOG(string hogfile, vector <vector<float> > v_descriptors, vector <v
 int main(int, char**)
 {
 	// path to folders
-	string pos_path= "/home/korujzade/Desktop/DriveSafe/backend/HOG/training/bike/";
-	string annotation_path = "/home/korujzade/Desktop/DriveSafe/backend/HOG/training/annotations/";
-	string neg_path = "/home/korujzade/Desktop/DriveSafe/backend/HOG/training/none/";
+	string pos_path= "/Users/rj/Documents/DriveSafe/backend/HOG/training/bikes/";
+	string annotation_path = "/Users/rj/Documents/DriveSafe/backend/HOG/training/annotations/";
+	string neg_path = "/Users/rj/Documents/DriveSafe/backend/HOG/training/none/";
 
 	// arrays for files in each folder
 	vector<string> pos_files = files(pos_path);
@@ -91,14 +91,22 @@ int main(int, char**)
 	for (uint i = 0; i < neg_files.size(); i++)
 	{
 		string path_to_neg_file = neg_path + neg_files[i];
-		Mat img = imread(path_to_neg_file);
+		for (int j = 0; j < 256; j = j + 256)
+		{	
+			for (int k = 0; k <= 256; k = k + 256)
+			{
+				Mat img = imread(path_to_neg_file);
+				Rect myROI(j, k, 128, 128);
+				img = img(myROI);
+				
+				// find descriptor values of images
+				HOG_descriptors newhog = hog(img);
 
-		// find descriptor values of images
-		HOG_descriptors newhog = hog(img);
-
-		// write descriptor values to two dimensional array
-		v_descriptors_neg.push_back(newhog.descriptors);
-		v_locations_neg.push_back(newhog.locations);
+				// write descriptor values to two dimensional array
+				v_descriptors_neg.push_back(newhog.descriptors);
+				v_locations_neg.push_back(newhog.locations);
+			}
+		}		
 	}
 
 	// release hog values to xml files
@@ -121,8 +129,8 @@ vector<string> files(string path)
 			else result.push_back(string(ent->d_name));
 		sort(result.begin(), result.end());
 	}
-	cout << result.front() << endl;
-	cout << result.back() << endl;
+	// cout << result.front() << endl;
+	// cout << result.back() << endl;
 	return result;
 }
 
@@ -136,7 +144,7 @@ HOG_descriptors hog(Mat img)
 	cvtColor(img, grayImg, CV_RGB2GRAY);
 
 	// windows size: 128x128; block size: 8x8; block stride: 4x4; cell size: 4x4; nbits: 9
-	HOGDescriptor hog(Size(128,128), Size(8,8), Size(4,4), Size(4,4), 9);
+	HOGDescriptor hog(Size(64,64), Size(16,16), Size(8,8), Size(8,8), 9);
 	vector <float> descriptors;
 	vector <Point> locations;
 	hog.compute(grayImg, descriptors, Size(0,0), Size(0,0), locations);

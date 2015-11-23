@@ -13,11 +13,12 @@ int main(int, char**)
 {
  
  //Read Hog feature from XML file
- printf("1. Feature data xml load\n");
+cout << "Reading positive and negative HOG descriptor values from xml files ..." << endl;
 
  //create xml to read
  FileStorage read_PositiveXml;
- read_PositiveXml.open("../HOG/pos.xml", FileStorage::READ);
+ read_PositiveXml.open("../HOG2/pos.xml", FileStorage::READ);
+
  FileStorage read_NegativeXml;
  //Positive Mat
  Mat pMat;
@@ -26,7 +27,8 @@ int main(int, char**)
  int pRow,pCol;
  pRow = pMat.rows; pCol = pMat.cols;
 
- read_NegativeXml.open("../HOG/neg.xml", FileStorage::READ);
+ read_NegativeXml.open("../HOG2/neg.xml", FileStorage::READ);
+ 
 
   //Negative Mat
  Mat nMat;
@@ -36,14 +38,17 @@ int main(int, char**)
  nRow = nMat.rows; nCol = nMat.cols;
 
  //Rows, Cols printf
+ cout << "Row and columns" << endl;
  printf("   pRow=%d pCol=%d, nRow=%d nCol=%d\n", pRow, pCol, nRow, nCol );
  //release
  read_PositiveXml.release();
+  cout << "Reading positive values DONE!" << endl;
  //release
  read_NegativeXml.release();
+ cout << "Reading negative values DONE!" << endl;
 
  //Make training data for SVM
- printf("Make training data for SVM\n");
+ printf("Making training data for SVM ...\n");
  //descriptor data set
  Mat posneg_descriptors_mat( pRow + nRow, pCol, CV_32FC1 ); //in here pCol and nCol is descriptor number, so two value must be same;
 
@@ -57,7 +62,7 @@ int main(int, char**)
       labels.rowRange( 0, pRow ) = Scalar( 1.0 );
 
  //Set svm parameter
- printf("SVM training\n");
+ printf("SVM training ...\n");
  Ptr<SVM> svm = SVM::create();
  svm->setType(SVM::C_SVC);
  svm->setKernel(SVM::LINEAR);
@@ -65,9 +70,5 @@ int main(int, char**)
  Ptr<TrainData> td =TrainData::create(posneg_descriptors_mat, ROW_SAMPLE, labels);
  svm->trainAuto(td);
 
- svm->save("trainedSVM.xml");
-
- //Trained data save
- printf("5. SVM xml save\n");
- // /svm.save( "trainedSVM.xml" );
+ svm->save("trainedSVM2.xml");
 }

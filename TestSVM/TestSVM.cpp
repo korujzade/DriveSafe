@@ -8,10 +8,14 @@
 #include <iostream>
 #include <vector>
 #include "dirent.h"
+#include "time.h"
 
 using namespace cv;
 using namespace cv::ml;
 using namespace std;
+
+clock_t t1, t2;
+
 
 struct pn
 {
@@ -19,8 +23,38 @@ struct pn
 	int n;
 };
 
+pn testRecords(char folderName[100]);
 // load trained svm xml
 Ptr<SVM> svm = StatModel::load<SVM>("../TrainSVM/trainedSVM.xml");
+Ptr<SVM> svm2 = StatModel::load<SVM>("../TrainSVM/trainedSVM2.xml");
+
+int main(int, char**)
+{
+  t1 = clock()/(CLOCKS_PER_SEC/1000);
+  pn pospn;
+  pn negpn;
+
+  char folderName[100] = "testbikes/bikes";
+  char negfn[100] = "none-testing/";
+
+	pospn = testRecords(folderName);
+	negpn = testRecords(negfn);
+
+  float accuracy = (float)((pospn.p + negpn.n))/(float)((pospn.p + pospn.n + negpn.n + negpn.p));
+  float sensitivity = (float)(pospn.p)/(float)(pospn.p + pospn.n);
+  float spesificity = (float)(negpn.n)/(float)(negpn.p + negpn.n);
+
+  cout << "true positive results: " << pospn.p << endl;
+  cout << "false positive results: " << pospn.n << endl;
+  cout << "true negative results: " << negpn.n << endl;
+  cout << "false negative results: " << negpn.p << endl;
+  cout << "accuracy: " << accuracy << endl;
+  cout << "sensitivity: " << sensitivity << endl;
+  cout << "spesificity: " << spesificity << endl; 
+  t2 = clock()/(CLOCKS_PER_SEC/1000);
+  float diff ((float)t2 - (float)t1);
+  cout << diff << endl;
+}
 
 pn testRecords(char folderName[100])
 {
@@ -45,7 +79,7 @@ pn testRecords(char folderName[100])
 
 				resize(img, img, Size(128,128));
 				cvtColor(img, grayImg, CV_RGB2GRAY);
-				HOGDescriptor hog(Size(128,128), Size(8,8), Size(4,4), Size(4,4), 9);
+				HOGDescriptor hog(Size(64,64), Size(16,16), Size(8,8), Size(8,8), 9);
 				vector <float> descriptors;
 				vector <Point> locations;
 				hog.compute(grayImg, descriptors, Size(0,0), Size(0,0), locations);
@@ -60,8 +94,9 @@ pn testRecords(char folderName[100])
 				copy(tmp.begin<float>(), tmp.end<float>(), newsampleMat.begin<float>());
 
 				int res = svm->predict(newsampleMat);
+        int res2 = svm2->predict(newsampleMat);
 
-				if (res == 1)
+				if (res == 1 || res2 == 1)
 					newpn.p++;
 				if (res == 0)
 					newpn.n++;
@@ -75,26 +110,4 @@ pn testRecords(char folderName[100])
 	  return newpn;
 	}
 	return newpn;
-}
-
-int main(int, char**)
-{
-  pn pospn;
-  pn negpn;
-
-  char folderName[100] = "testbikes";
-  char negfn[100] = "../HOG/training/none/";
-
-	pospn = testRecords(folderName);
-	negpn = testRecords(negfn);
-
-  float accuracy = (float)((pospn.p + negpn.n))/(float)((pospn.p + pospn.n + negpn.n + negpn.p));
-
-  cout << "true positive results: " << pospn.p << endl;
-  cout << "false positive results: " << pospn.n << endl;
-  cout << "true negative results: " << negpn.n << endl;
-  cout << "false negative results: " << negpn.p << endl;
-
-  
-  cout << "accuracy: " << accuracy << endl;
 }
