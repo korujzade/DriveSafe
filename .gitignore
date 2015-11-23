@@ -2,6 +2,7 @@
 !.gitignore
 !HOG/
 !HOG2/
+!TestOneImage/
 !Main/
 !TestSVM/
 !TrainSVM/
