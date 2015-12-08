@@ -23,9 +23,9 @@ void releaseHOG(string hogfile, vector <vector<float> > v_descriptors, vector <v
 int main(int, char**)
 {
 	// path to folders
-	string pos_path= "/Users/rj/Documents/DriveSafe/backend/HOG/training/bikes/";
-	string annotation_path = "/Users/rj/Documents/DriveSafe/backend/HOG/training/annotations/";
-	string neg_path = "/Users/rj/Documents/DriveSafe/backend/HOG/training/none/";
+	string pos_path= "/home/korujzade/Desktop/DriveSafe/backend/HOG/training/bikes/";
+	string annotation_path = "/home/korujzade/Desktop/DriveSafe/backend/HOG/training/annotations/";
+	string neg_path = "/home/korujzade/Desktop/DriveSafe/backend/HOG/training/none/";
 
 	// arrays for files in each folder
 	vector<string> pos_files = files(pos_path);
@@ -33,8 +33,8 @@ int main(int, char**)
 	vector<string> neg_files = files(neg_path);
 
 	// xml files to keep descriptor values
-	string posXML = "pos.xml";
-	string negXML = "neg.xml";
+	string posXML = "pos2.xml";
+	string negXML = "neg2.xml";
 
 	// arrays to keep descriptor values and locations
 	vector <vector<float> > v_descriptors;

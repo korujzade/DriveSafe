@@ -23,16 +23,16 @@ void releaseHOG(string hogfile, vector <vector<float> > v_descriptors, vector <v
 int main(int, char**)
 {
 	// path to folders
-	string pos_path= "/Users/rj/Documents/DriveSafe/backend/HOG2/training/front-back-bikes/";
-	string neg_path = "/Users/rj/Documents/DriveSafe/backend/HOG/training/none/";
+	string pos_path= "/home/korujzade/Desktop/DriveSafe/backend/HOG2/training/front-back-bikes";
+	string neg_path = "/home/korujzade/Desktop/DriveSafe/backend/HOG/training/none";
 
 	// arrays for files in each folder
 	vector<string> pos_files = files(pos_path);
 	vector<string> neg_files = files(neg_path);
 
 	// xml files to keep descriptor values
-	string posXML = "pos.xml";
-	string negXML = "neg.xml";
+	string posXML = "pos2.xml";
+	string negXML = "neg2.xml";
 
 	// arrays to keep descriptor values and locations
 	vector <vector<float> > v_descriptors;
@@ -40,7 +40,7 @@ int main(int, char**)
 	vector <vector<float> > v_descriptors_neg;
 	vector <vector<Point> > v_locations_neg;
 
-	// extract descriptor values from positive imagess
+	// extract descriptor values from positive images
 	for(uint i =0; i < pos_files.size(); i++)
 	{
 		string path_to_pos_file = pos_path + pos_files[i];
