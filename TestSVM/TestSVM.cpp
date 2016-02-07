@@ -1,14 +1,6 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/opencv.hpp>
-#include <opencv2/imgproc.hpp>
-#include "opencv2/imgcodecs.hpp"
-#include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/ml.hpp>
-#include <iostream>
-#include <vector>
 #include "dirent.h"
-#include "time.h"
 
 using namespace cv;
 using namespace cv::ml;
@@ -16,98 +8,126 @@ using namespace std;
 
 clock_t t1, t2;
 
-
 struct pn
 {
-	int p;
-	int n;
+    int p;
+    int n;
 };
 
-pn testRecords(char folderName[100]);
+pn testRecords(char folderName[50]);
 // load trained svm xml
-Ptr<SVM> svm = StatModel::load<SVM>("../TrainSVM/trainedSVM.xml");
-Ptr<SVM> svm2 = StatModel::load<SVM>("../TrainSVM/trainedSVM2.xml");
+Ptr<SVM> svm = StatModel::load<SVM>("/home/ko/Desktop/DriveSafe/backend/TrainSVM/trainedSVM.xml");
+Ptr<SVM> svm2 = StatModel::load<SVM>("/home/ko/Desktop/DriveSafe/backend/TrainSVM/trainedSVM2.xml");
 
 int main(int, char**)
 {
-  t1 = clock()/(CLOCKS_PER_SEC/1000);
-  pn pospn;
-  pn negpn;
+    t1 = clock()/(CLOCKS_PER_SEC/1000);
+    pn pospn;
+    pn negpn;
 
-  char folderName[100] = "testbikes/bikes";
-  char negfn[100] = "none-testing/";
+    char folderName[60];
+    String tmp = "testbikes/front-back-bikes";
+    strncpy(folderName, tmp.c_str(), sizeof(folderName));
+    folderName[sizeof(folderName) - 1] = 0;
 
-	pospn = testRecords(folderName);
-	negpn = testRecords(negfn);
+    char negfn[100] = "none-testing/";
 
-  float accuracy = (float)((pospn.p + negpn.n))/(float)((pospn.p + pospn.n + negpn.n + negpn.p));
-  float sensitivity = (float)(pospn.p)/(float)(pospn.p + pospn.n);
-  float spesificity = (float)(negpn.n)/(float)(negpn.p + negpn.n);
+    pospn = testRecords(folderName);
+    negpn = testRecords(negfn);
 
-  cout << "true positive results: " << pospn.p << endl;
-  cout << "false positive results: " << pospn.n << endl;
-  cout << "true negative results: " << negpn.n << endl;
-  cout << "false negative results: " << negpn.p << endl;
-  cout << "accuracy: " << accuracy << endl;
-  cout << "sensitivity: " << sensitivity << endl;
-  cout << "spesificity: " << spesificity << endl; 
-  t2 = clock()/(CLOCKS_PER_SEC/1000);
-  float diff ((float)t2 - (float)t1);
-  cout << diff << endl;
+    float accuracy = (float)((pospn.p + negpn.n))/(float)((pospn.p + pospn.n + negpn.n + negpn.p));
+    float sensitivity = (float)(pospn.p)/(float)(pospn.p + pospn.n);
+    float spesificity = (float)(negpn.n)/(float)(negpn.p + negpn.n);
+
+    cout << "true positive results: " << pospn.p << endl;
+    cout << "false positive results: " << pospn.n << endl;
+    cout << "true negative results: " << negpn.n << endl;
+    cout << "false negative results: " << negpn.p << endl;
+    cout << "accuracy: " << accuracy << endl;
+    cout << "sensitivity: " << sensitivity << endl;
+    cout << "spesificity: " << spesificity << endl;
+
+    t2 = clock()/(CLOCKS_PER_SEC/1000);
+    float diff ((float)t2 - (float)t1);
+    cout << diff << endl;
 }
 
-pn testRecords(char folderName[100])
+pn testRecords(char folderName[59])
 {
-	DIR *dir;
-  struct dirent *ent;
+    DIR *dir;
+    struct dirent *ent;
 
-	pn newpn;
-	newpn.p = 0;
-	newpn.n = 0;
+    pn newpn;
+    newpn.p = 0;
+    newpn.n = 0;
 
-	if ((dir = opendir (folderName)) != NULL) 
-	{
-		while ((ent = readdir (dir)) != NULL) 
-		{
-			if ( !strcmp(ent->d_name, ".") || !strcmp(ent->d_name, ".."));
-			else
-			{
-				Mat grayImg;
-				char filen[100];
-				sprintf(filen, "%s/%s",folderName, ent->d_name);
-				Mat img = imread(filen);
 
-				resize(img, img, Size(128,128));
-				cvtColor(img, grayImg, CV_RGB2GRAY);
-				HOGDescriptor hog(Size(64,64), Size(16,16), Size(8,8), Size(8,8), 9);
-				vector <float> descriptors;
-				vector <Point> locations;
-				hog.compute(grayImg, descriptors, Size(0,0), Size(0,0), locations);
+    if ((dir = opendir (folderName)) != NULL)
+    {
+        while ((ent = readdir (dir)) != NULL)
+        {
+            if ( !strcmp(ent->d_name, ".") || !strcmp(ent->d_name, ".."));
+            else
+            {
+                Mat grayImg;
+                char filen[100];
+                sprintf(filen, "%s/%s",folderName, ent->d_name);
+                Mat img = imread(filen);
 
-				Mat sampleMat = Mat(descriptors);
+                resize(img, img, Size(256,256));
+                int res1 =0;
+                int res2 =0;
+                bool shouldExit = false;
+                for (int i = 0; i <=128; i+=10) {
+                    for (int j = 0; j<=128; j+=10) {
+                        // rectangle(img, Point(i, j), Point(i+10, j+10), Scalar(98,212,32),1);
+                        Rect myROI(i, j, 128, 128);
+                        Mat croppedImg = img(myROI);
 
-				int cols = sampleMat.rows;
-				int rows = sampleMat.cols;
-				Mat newsampleMat(rows, cols, CV_32F);
+                        cvtColor(croppedImg, grayImg, CV_RGB2GRAY);
+                        HOGDescriptor hog(Size(128,128), Size(8,8), Size(4,4), Size(4,4), 9);
+                        vector <float> descriptors;
+                        vector <Point> locations;
+                        hog.compute(grayImg, descriptors, Size(0,0), Size(0,0), locations);
 
-				Mat tmp = sampleMat.col(0);
-				copy(tmp.begin<float>(), tmp.end<float>(), newsampleMat.begin<float>());
+                        Mat sampleMat = Mat(descriptors);
 
-				int res = svm->predict(newsampleMat);
-        int res2 = svm2->predict(newsampleMat);
+                        int cols = sampleMat.rows;
+                        int rows = sampleMat.cols;
+                        Mat newsampleMat(rows, cols, CV_32F);
 
-				if (res == 1 || res2 == 1)
-					newpn.p++;
-				if (res == 0)
-					newpn.n++;
-			}
-		}
-		closedir (dir);
-	} 
-	else 
-	{
-	  perror ("");
-	  return newpn;
-	}
-	return newpn;
+                        Mat tmp = sampleMat.col(0);
+                        copy(tmp.begin<float>(), tmp.end<float>(), newsampleMat.begin<float>());
+
+                        res1 = svm->predict(newsampleMat);
+                        res2 = svm2->predict(newsampleMat);
+
+                        if (res2 == 1)
+                        {
+                            newpn.p++;
+                            shouldExit = true;
+                            rectangle(img, Point(i, j), Point(i+128, j+128), Scalar(32,32,212),1);
+                            break;
+                        }
+                    }
+                    if(shouldExit) break;
+                }
+
+   				// imshow("test", img);
+   				// if(waitKey(3000) >= 0) break;
+
+                //cout << "Done!" << endl;
+                if (res2 == -1)
+                    newpn.n++;
+            }
+
+        }
+        closedir (dir);
+    }
+    else
+    {
+        perror ("");
+        return newpn;
+    }
+    return newpn;
 }

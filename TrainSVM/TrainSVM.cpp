@@ -1,9 +1,4 @@
-#include <opencv2/core.hpp>
-#include <opencv2/imgproc.hpp>
-#include "opencv2/imgcodecs.hpp"
-#include <opencv2/highgui.hpp>
-#include <opencv2/ml.hpp>
-#include <iostream>
+#include <opencv2/opencv.hpp>
 
 using namespace cv;
 using namespace cv::ml;
@@ -17,9 +12,7 @@ cout << "Reading positive and negative HOG descriptor values from xml files ..."
 
  //create xml to read
  FileStorage read_PositiveXml;
- read_PositiveXml.open("../HOG2/pos.xml", FileStorage::READ);
-
- FileStorage read_NegativeXml;
+ read_PositiveXml.open("../HOG/pos.xml", FileStorage::READ);
  //Positive Mat
  Mat pMat;
  read_PositiveXml["Descriptor_of_images"] >> pMat;
@@ -27,26 +20,29 @@ cout << "Reading positive and negative HOG descriptor values from xml files ..."
  int pRow,pCol;
  pRow = pMat.rows; pCol = pMat.cols;
 
- read_NegativeXml.open("../HOG2/neg.xml", FileStorage::READ);
- 
+ //release
+ read_PositiveXml.release();
+ cout << "Reading positive values DONE!" << endl;
 
+ FileStorage read_NegativeXml;
+ read_NegativeXml.open("../HOG/neg.xml", FileStorage::READ);
+ 
   //Negative Mat
  Mat nMat;
  read_NegativeXml["Descriptor_of_images"] >> nMat;
+ 
  //Read Row, Cols
  int nRow,nCol;
  nRow = nMat.rows; nCol = nMat.cols;
 
- //Rows, Cols printf
- cout << "Row and columns" << endl;
- printf("   pRow=%d pCol=%d, nRow=%d nCol=%d\n", pRow, pCol, nRow, nCol );
- //release
- read_PositiveXml.release();
-  cout << "Reading positive values DONE!" << endl;
- //release
+//release
  read_NegativeXml.release();
  cout << "Reading negative values DONE!" << endl;
 
+ //Rows, Cols printf
+ cout << "Row and columns" << endl;
+ printf("   pRow=%d pCol=%d, nRow=%d nCol=%d\n", pRow, pCol, nRow, nCol );
+ 
  //Make training data for SVM
  printf("Making training data for SVM ...\n");
  //descriptor data set
@@ -66,9 +62,10 @@ cout << "Reading positive and negative HOG descriptor values from xml files ..."
  Ptr<SVM> svm = SVM::create();
  svm->setType(SVM::C_SVC);
  svm->setKernel(SVM::LINEAR);
- svm->setTermCriteria(TermCriteria(TermCriteria::MAX_ITER, 10000, 1e-6));
+ svm->setTermCriteria(TermCriteria(TermCriteria::MAX_ITER+TermCriteria::EPS, 1000, FLT_EPSILON));
  Ptr<TrainData> td =TrainData::create(posneg_descriptors_mat, ROW_SAMPLE, labels);
  svm->trainAuto(td);
+ printf("Done!\n");
 
- svm->save("trainedSVM2.xml");
+ svm->save("trainedSVM.xml");
 }
