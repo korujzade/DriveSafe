@@ -78,8 +78,8 @@ pn testRecords(char folderName[59])
                 int res1 =0;
                 int res2 =0;
                 bool shouldExit = false;
-                for (int i = 0; i <=128; i+=10) {
-                    for (int j = 0; j<=128; j+=10) {
+                for (int i = 20; i <=128; i+=10) {
+                    for (int j = 20; j<=128; j+=10) {
                         // rectangle(img, Point(i, j), Point(i+10, j+10), Scalar(98,212,32),1);
                         Rect myROI(i, j, 128, 128);
                         Mat croppedImg = img(myROI);
@@ -113,8 +113,8 @@ pn testRecords(char folderName[59])
                     if(shouldExit) break;
                 }
 
-   				// imshow("test", img);
-   				// if(waitKey(3000) >= 0) break;
+   				imshow("test", img);
+   				if(waitKey(3000) >= 0) break;
 
                 //cout << "Done!" << endl;
                 if (res2 == -1)
