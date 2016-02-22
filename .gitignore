@@ -1,13 +1,4 @@
-*
-!.gitignore
-!HOG/
-!HOG2/
-!TestOneImage/
-!Main/
-!TestSVM/
-!TrainSVM/
-!CMakeLists.txt
-!*.cpp
-
+Data/*
+xmlFiles/*
 
 
