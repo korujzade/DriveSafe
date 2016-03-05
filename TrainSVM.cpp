@@ -3,6 +3,7 @@
 //
 
 #include "TrainSVM.h"
+#include "HOG.h"
 
 using namespace cv;
 using namespace cv::ml;
@@ -15,17 +16,16 @@ public:
 };
 
 Data getMatrixofDescriptorValues(string pos, string neg);
-void generateSVMModule(Data td);
+void generateSVMModule(Data td, string dir_to_xml_files);
 
 
-void TrainSVM::createSVMModule(string posNo1XML, string posNo2XML, string negXML) {
+void TrainSVM::createSVMModule(string posNo1XML, string posNo2XML, string negXML, string dir_to_xml_files) {
 
 //    Data td = getMatrixofDescriptorValues(posNo1XML, negXML);
-//    generateSVMModule(td);
+//    generateSVMModule(td, dir_to_xml_files);
 
     Data td = getMatrixofDescriptorValues(posNo2XML, negXML);
-    generateSVMModule(td);
-
+    generateSVMModule(td, dir_to_xml_files);
 }
 
 
@@ -89,7 +89,7 @@ Data getMatrixofDescriptorValues(string pos, string neg) {
     return td;
 }
 
-void generateSVMModule(Data d) {
+void generateSVMModule(Data d, string dir_to_xml_files) {
 
     //Set svm parameter
     printf("SVM training ...\n");
@@ -101,6 +101,6 @@ void generateSVMModule(Data d) {
     svm->trainAuto(td);
     printf("Done!\n");
 
-    svm->save("trainedSVM.xml");
-
+    string fn = dir_to_xml_files + "trainedSVM.xml";
+    svm->save(fn);
 }

@@ -3,7 +3,6 @@
 //
 
 #include "TestSVM.h"
-#include <opencv2/opencv.hpp>
 #include <dirent.h>
 
 using namespace std;
@@ -33,7 +32,7 @@ void TestSVM::testRecords(string dir_to_test_bikes, string dir_to_test_negative_
     float accuracy = (float)((posImgs.pos_count + negImgs.neg_count))/(float)((posImgs.pos_count + posImgs.neg_count
                                                                                + negImgs.neg_count + negImgs.pos_count));
     float sensitivity = (float)(posImgs.pos_count)/(float)(posImgs.pos_count + posImgs.neg_count);
-    float spesificity = (float)(negImgs.neg_count)/(float)(negImgs.pos_count + negImgs.pos_count);
+    float spesificity = (float)(negImgs.neg_count)/(float)(negImgs.pos_count + negImgs.neg_count);
 
     cout << "true positive results: " << posImgs.pos_count << endl;
     cout << "false positive results: " << posImgs.neg_count << endl;
@@ -52,9 +51,10 @@ void TestSVM::testRecords(string dir_to_test_bikes, string dir_to_test_negative_
 
 PosNeg getResults(string dir_name, string dir_to_xml_files) {
 
-    Ptr<SVM> svm = StatModel::load<SVM>(dir_to_xml_files + "trainedSVM1.xml");
-    Ptr<SVM> svm2 = StatModel::load<SVM>(dir_to_xml_files + "trainedSVM2.xml");
+    // mainly front back view bikes
+    Ptr<SVM> svm = StatModel::load<SVM>(dir_to_xml_files + "trainedSVM.xml");
     const char* dirName = dir_name.c_str();
+    namedWindow("Images", CV_WINDOW_NORMAL);
 
     DIR *dir;
     struct dirent *ent;
@@ -76,7 +76,7 @@ PosNeg getResults(string dir_name, string dir_to_xml_files) {
 
                 resize(img, img, Size(256,256));
                 int res1 =0;
-                int res2 =0;
+                int res =0;
                 bool shouldExit = false;
                 for (int i = 20; i <=128; i+=10) {
                     for (int j = 20; j<=128; j+=10) {
@@ -85,7 +85,7 @@ PosNeg getResults(string dir_name, string dir_to_xml_files) {
                         Mat croppedImg = img(myROI);
 
                         cvtColor(croppedImg, grayImg, CV_RGB2GRAY);
-                        HOGDescriptor hog(Size(128,128), Size(8,8), Size(4,4), Size(4,4), 9);
+                        HOGDescriptor hog(Size(128,128), Size(16,16), Size(8,8), Size(8,8), 9);
                         vector <float> descriptors;
                         vector <Point> locations;
                         hog.compute(grayImg, descriptors, Size(0,0), Size(0,0), locations);
@@ -99,10 +99,10 @@ PosNeg getResults(string dir_name, string dir_to_xml_files) {
                         Mat tmp = sampleMat.col(0);
                         copy(tmp.begin<float>(), tmp.end<float>(), newsampleMat.begin<float>());
 
-                        res1 = svm->predict(newsampleMat);
-                        res2 = svm2->predict(newsampleMat);
+                        // front back view bikes
+                        res = svm->predict(newsampleMat);
 
-                        if (res2 == 1) {
+                        if (res == 1) {
                             posNeg.pos_count++;
                             shouldExit = true;
                             rectangle(img, Point(i, j), Point(i+128, j+128), Scalar(32,32,212),1);
@@ -111,13 +111,11 @@ PosNeg getResults(string dir_name, string dir_to_xml_files) {
                     }
                     if(shouldExit) break;
                 }
-//
-                imshow("Show Boundaries", img);
-                if(waitKey(3000) >= 0) break;
-                  if (res2 == -1) posNeg.neg_count++;
+//                imshow("Images", img);
+//                if(waitKey(3000) >= 0) break;
+                if (res == -1) posNeg.neg_count++;
             }
         }
-        cout << count << endl;
         closedir (dir);
     } else {
         perror ("");

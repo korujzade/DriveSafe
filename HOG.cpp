@@ -11,7 +11,7 @@ using namespace std;
 
 // standard size of annotated bike images
 #define WIDTH_OF_IMAGE 640;
-#define HEIGTH_OF_IMAGE 480;
+#define HEIGHT_OF_IMAGE 480;
 
 // class for hog descriptor values and locations
 class HOG_descriptors {
@@ -67,7 +67,7 @@ void HOG::generateFeatures(string dir_to_read_bikes, string dir_to_read_bike_ann
         int maxX = 0;
         int minX = WIDTH_OF_IMAGE;
         int maxY = 0;
-        int minY = HEIGTH_OF_IMAGE;
+        int minY = HEIGHT_OF_IMAGE;
 
         // find coordinates of each bike in each image from relevant annotation of it
         for(int i=0; i<gtImg.cols; i++) {
@@ -171,10 +171,13 @@ HOG_descriptors getHOGvalues(Mat img)
     cvtColor(img, grayImg, CV_RGB2GRAY);
 
     // windows size: 128x128; block size: 8x8; block stride: 4x4; cell size: 4x4; nbits: 9
-    HOGDescriptor hog(Size(128,128), Size(8,8), Size(4,4), Size(4,4), 9);
+    HOGDescriptor hog(Size(128,128), Size(16,16), Size(8,8), Size(8,8), 9);
     vector <float> descriptors;
     vector <Point> locations;
-    hog.compute(grayImg, descriptors, Size(0,0), Size(0,0), locations);
+    hog.compute(grayImg, descriptors, Size(0,0), Size(0,0));
+
+    vector<float> detector;
+    hog.setSVMDetector(detector);
 
     hog_desc_values.descriptors = descriptors;
     hog_desc_values.locations = locations;
