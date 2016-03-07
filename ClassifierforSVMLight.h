@@ -1,0 +1,14 @@
+//
+// Created by ko on 05/03/16.
+//
+
+#ifndef DRIVESAFE_CLASSIFIERFORSVMLIGHT_H
+#define DRIVESAFE_CLASSIFIERFORSVMLIGHT_H
+
+
+class ClassifierforSVMLight {
+
+};
+
+
+#endif //DRIVESAFE_CLASSIFIERFORSVMLIGHT_H

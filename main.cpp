@@ -1,8 +1,9 @@
 #include <opencv2/opencv.hpp>
-#include "HOG.h"
-#include "TrainSVM.h"
-#include "TestSVM.h"
-#include "TestVideos.h"
+#include "HOG/HOG.h"
+#include "training/TrainSVM.h"
+#include "classification/TestSVM.h"
+#include "classification/TestVideos.h"
+#include "svmlight_hog/HOGforSVMLight.h"
 
 using namespace cv;
 using namespace std;
@@ -18,6 +19,10 @@ int main (int, char**) {
     string dir_to_test_negative_images;
     string video;
     string ans;
+//
+//    HOGforSVMLight hoGforSVMLight;
+//    hoGforSVMLight.training("/home/ko/Documents/DriveSafe/Data/training/bikes2/", "/home/ko/Documents/DriveSafe/Data/training/none_bikes/");
+
 
 //    cout << "Would you like to extract features from images? (yes/no)" << endl;
 //    cout << "Note that if answer is \"no\", you should have relevant file to keep features in requested folder" << endl;
@@ -113,6 +118,14 @@ int main (int, char**) {
 //            testVideo.testVideo(dir_to_xml_files, video);
 //        }
 //    }
+
+//    HOG hog;
+//    hog.generateFeatures("/home/ko/Documents/DriveSafe/Data/training/bikes1/", "/home/ko/Documents/DriveSafe/Data/training/bikes1_annotations/",
+//                             "/home/ko/Documents/DriveSafe/Data/training/bikes2/", "/home/ko/Documents/DriveSafe/Data/training/none_bikes/", "/home/ko/Documents/DriveSafe/xmlFiles/");
+
+//    TrainSVM trainSVM;
+//    trainSVM.createSVMModule("/home/ko/Documents/DriveSafe/xmlFiles/pos1.xml", "/home/ko/Documents/DriveSafe/xmlFiles/pos2.xml", "/home/ko/Documents/DriveSafe/xmlFiles/neg.xml", "/home/ko/Documents/DriveSafe/xmlFiles/");
+
 //
 //    system("/home/ko/Downloads/nma.sh \"DriveSafe\" \"Bicycle Detected\" \"asdf\" \"2\"");
 //    TestVideos testVideo;
@@ -120,9 +133,9 @@ int main (int, char**) {
 
 //    TestVideos testVideo;
 //    testVideo.testVideo("/home/ko/Documents/DriveSafe/xmlFiles/", "0");
-//
-//    TestSVM testSVM;
-//    testSVM.testRecords("/home/ko/Documents/DriveSafe/Data/testing/bikes2/", "/home/ko/Documents/DriveSafe/Data/testing/none_bikes/", "/home/ko/Documents/DriveSafe/xmlFiles/");
+////
+    TestSVM testSVM;
+    testSVM.testRecords("/home/ko/Documents/DriveSafe/Data/testing/bikes2/", "/home/ko/Documents/DriveSafe/Data/testing/none_bikes/", "/home/ko/Documents/DriveSafe/xmlFiles/");
 
     return 0;
 }
