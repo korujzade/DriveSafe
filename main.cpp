@@ -119,12 +119,12 @@ int main (int, char**) {
 //        }
 //    }
 
-//    HOG hog;
-//    hog.generateFeatures("/home/ko/Documents/DriveSafe/Data/training/bikes1/", "/home/ko/Documents/DriveSafe/Data/training/bikes1_annotations/",
-//                             "/home/ko/Documents/DriveSafe/Data/training/bikes2/", "/home/ko/Documents/DriveSafe/Data/training/none_bikes/", "/home/ko/Documents/DriveSafe/xmlFiles/");
+    HOG hog;
+    hog.generateFeatures("/home/ko/Documents/DriveSafe/Data/training/bikes1/", "/home/ko/Documents/DriveSafe/Data/training/bikes1_annotations/",
+                             "/home/ko/Documents/DriveSafe/Data/training/bikes2/", "/home/ko/Documents/DriveSafe/Data/training/none_bikes/", "/home/ko/Documents/DriveSafe/xmlFiles/");
 
-//    TrainSVM trainSVM;
-//    trainSVM.createSVMModule("/home/ko/Documents/DriveSafe/xmlFiles/pos1.xml", "/home/ko/Documents/DriveSafe/xmlFiles/pos2.xml", "/home/ko/Documents/DriveSafe/xmlFiles/neg.xml", "/home/ko/Documents/DriveSafe/xmlFiles/");
+    TrainSVM trainSVM;
+    trainSVM.createSVMModule("/home/ko/Documents/DriveSafe/xmlFiles/pos1.xml", "/home/ko/Documents/DriveSafe/xmlFiles/pos2.xml", "/home/ko/Documents/DriveSafe/xmlFiles/neg.xml", "/home/ko/Documents/DriveSafe/xmlFiles/");
 
 //
 //    system("/home/ko/Downloads/nma.sh \"DriveSafe\" \"Bicycle Detected\" \"asdf\" \"2\"");
