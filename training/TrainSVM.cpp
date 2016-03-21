@@ -2,97 +2,102 @@
 // Created by ko on 08/02/16.
 //
 
+/*
+ * Train extracted features and create svm model
+ */
+
 #include "TrainSVM.h"
-#include "../HOG/HOG.h"
 
 using namespace cv;
 using namespace cv::ml;
 using namespace std;
 
+// class has matrixes which keep descriptor values and it's label (positive or negative image)
 class Data {
 public:
     Mat descriptorValues;
     Mat labels;
 };
 
+// declare functions
 Data getMatrixofDescriptorValues(string pos, string neg);
 void generateSVMModule(Data td, string dir_to_xml_files);
 
 
-void TrainSVM::createSVMModule(string posNo1XML, string posNo2XML, string negXML, string dir_to_xml_files) {
+void TrainSVM::createSVMModule(string posXML, string negXML, string dir_to_xml_files) {
 
-//    Data td = getMatrixofDescriptorValues(posNo1XML, negXML);
-//    generateSVMModule(td, dir_to_xml_files);
-
-    Data td = getMatrixofDescriptorValues(posNo2XML, negXML);
+    Data td = getMatrixofDescriptorValues(posXML, negXML);
     generateSVMModule(td, dir_to_xml_files);
 }
 
-
+// get descriptor values of positive and negative images
+// reference: http://study.marearts.com/2014_11_23_archive.html
 Data getMatrixofDescriptorValues(string pos, string neg) {
 
+    // create Data object keeping train data
     Data td;
 
-    //Read Hog feature from XML file
     cout << "Reading positive and negative HOG descriptor values from xml files ..." << endl;
 
-    //create xml to read
-    FileStorage read_PositiveXml;
-    read_PositiveXml.open(pos, FileStorage::READ);
-    //Positive Mat
-    Mat pMat;
-    read_PositiveXml["Descriptor_of_images"] >> pMat;
-    //Read Row, Cols
-    int pRow,pCol;
-    pRow = pMat.rows; pCol = pMat.cols;
+    //create xml file to read positive descriptor values
+    FileStorage pos_xml;
+    pos_xml.open(pos, FileStorage::READ);
+    // create matrix and write positive descriptor values from xml to it
+    Mat pos_mat;
+    pos_xml["Descriptor_of_images"] >> pos_mat;
+    int pos_row, pos_col;
+    pos_row = pos_mat.rows;
+    pos_col = pos_mat.cols;
 
-    //release
-    read_PositiveXml.release();
+    //release xml file, as we will not need it anymore
+    pos_xml.release();
     cout << "Reading positive values DONE!" << endl;
 
-    FileStorage read_NegativeXml;
-    read_NegativeXml.open(neg, FileStorage::READ);
+    // negative xml file to read negative descriptor values
+    FileStorage neg_xml;
+    neg_xml.open(neg, FileStorage::READ);
 
-    //Negative Mat
-    Mat nMat;
-    read_NegativeXml["Descriptor_of_images"] >> nMat;
+    //create matrix and write negative descriptor values from xml to it
+    Mat neg_mat;
+    neg_xml["Descriptor_of_images"] >> neg_mat;
 
-    //Read Row, Cols
-    int nRow,nCol;
-    nRow = nMat.rows; nCol = nMat.cols;
+    int neg_rows, neg_cols;
+    neg_rows = neg_mat.rows;
+    neg_cols = neg_mat.cols;
 
-//release
-    read_NegativeXml.release();
+    //release xml as we will not need it
+    neg_xml.release();
     cout << "Reading negative values DONE!" << endl;
 
-    //Rows, Cols printf
     cout << "Row and columns" << endl;
-    printf("   pRow=%d pCol=%d, nRow=%d nCol=%d\n", pRow, pCol, nRow, nCol );
+    cout << "positive row: " << pos_row << " positive column: " << pos_col << " negative rows: " << neg_rows;
+    cout << " negative columns: " << neg_cols << endl;
 
-    //Make training data for SVM
-    printf("Making training data for SVM ...\n");
+    //Make training data which will be used to feed svm
+    cout << "Preparing data suitable for SVM training" << endl;
     //descriptor data set
-    Mat posneg_descriptors_mat( pRow + nRow, pCol, CV_32FC1 ); //here pCol and nCol is descriptor number, so two value must be same;
+    Mat descriptors_alltogether(pos_row + neg_rows, pos_col, CV_32FC1 );
 
-    pMat.copyTo(posneg_descriptors_mat(Rect(0,0, pCol, pRow)));
-    nMat.copyTo(posneg_descriptors_mat(Rect(0,pRow, pCol, nRow)));
+    pos_mat.copyTo(descriptors_alltogether(Rect(0, 0, pos_col, pos_row)));
+    neg_mat.copyTo(descriptors_alltogether(Rect(0, pos_row, pos_col, neg_rows)));
 
-    cout << "rows: " << posneg_descriptors_mat.rows << " " << "cols: " << posneg_descriptors_mat.cols << endl;
+    cout << "rows: " << descriptors_alltogether.rows << " " << "cols: " << descriptors_alltogether.cols << endl;
 
-    //data labeling
-    Mat labels( pRow + nRow, 1, CV_32SC1, Scalar(-1.0) );
-    labels.rowRange( 0, pRow ) = Scalar( 1.0 );
+    // labels 1 and -1 negative and positive data
+    Mat labels(pos_row + neg_rows, 1, CV_32SC1, Scalar(-1.0) );
+    labels.rowRange(0, pos_row) = Scalar(1.0 );
 
-    td.descriptorValues = posneg_descriptors_mat;
+    td.descriptorValues = descriptors_alltogether;
     td.labels = labels;
 
     return td;
 }
 
+// train and generate svm model and write it to xml files using descriptor values
 void generateSVMModule(Data d, string dir_to_xml_files) {
 
-    //Set svm parameter
-    printf("SVM training ...\n");
+    //Set svm parameters
+    cout << "SVM training..." << endl;
     Ptr<SVM> svm = SVM::create();
     svm->setType(SVM::C_SVC);
     svm->setKernel(SVM::LINEAR);

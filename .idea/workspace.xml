@@ -13,9 +13,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2774a0c0-a74e-4ed4-8f8e-1542a61df36e" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/examples/ground_truth.jpg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/examples/original_image.bmp" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/CMakeFiles/cmake.check_cache" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/examples/trainedSVM.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/svmlight" afterPath="$PROJECT_DIR$/svmlight" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/HOG/HOG.cpp" afterPath="$PROJECT_DIR$/HOG/HOG.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/HOG/HOG.h" afterPath="$PROJECT_DIR$/HOG/HOG.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/classification/TestSVM.cpp" afterPath="$PROJECT_DIR$/classification/TestSVM.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/classification/TestVideos.cpp" afterPath="$PROJECT_DIR$/classification/TestVideos.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/classification/TestVideos.h" afterPath="$PROJECT_DIR$/classification/TestVideos.h" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.cpp" afterPath="$PROJECT_DIR$/main.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/training/TrainSVM.cpp" afterPath="$PROJECT_DIR$/training/TrainSVM.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/training/TrainSVM.h" afterPath="$PROJECT_DIR$/training/TrainSVM.h" />
     </list>
     <ignored path="DriveSafe.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -49,8 +62,8 @@
       <file leaf-file-name="main.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.23452769">
-              <caret line="99" column="21" selection-start-line="99" selection-start-column="21" selection-end-line="99" selection-end-column="21" />
+            <state vertical-scroll-proportion="0.80456024">
+              <caret line="156" column="33" selection-start-line="156" selection-start-column="33" selection-end-line="156" selection-end-column="33" />
               <folding />
             </state>
           </provider>
@@ -759,8 +772,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.23452769">
-          <caret line="99" column="21" selection-start-line="99" selection-start-column="21" selection-end-line="99" selection-end-column="21" />
+        <state vertical-scroll-proportion="0.80456024">
+          <caret line="156" column="33" selection-start-line="156" selection-start-column="33" selection-end-line="156" selection-end-column="33" />
           <folding />
         </state>
       </provider>

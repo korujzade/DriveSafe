@@ -11,7 +11,7 @@ using namespace std;
 class TrainSVM {
 
 public:
-    void createSVMModule(string posNo1XMl, string posNo2XML, string negXML, string dir_to_xml_files);
+    void createSVMModule(string posXML, string negXML, string dir_to_xml_files);
 };
 
 

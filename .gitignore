@@ -2,3 +2,4 @@ Data/*
 xmlFiles/*
 pathes.txt
 .idea/*
+examples/trainedSVM.xml

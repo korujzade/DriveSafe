@@ -11,7 +11,7 @@ using namespace std;
 
 class TestVideos {
 public:
-    void testVideo(string dir_to_xml_files, string video);
+    void testVideo(string dir_to_xml_files, string dir_to_false_negatives, string video);
 };
 
 
