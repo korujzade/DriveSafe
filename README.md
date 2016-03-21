@@ -37,8 +37,6 @@ The project “Drive Safe” is an application which recognises pre-defined obje
 
 - Notes
   - Annotations of the positive images basically describe the location of each object on each image with ground truth data. They are binary images, which white pixels show background and black pixels show an object. Most of the official datasets provide ground truth data of images. It makes your work easy as if you do not have annotations of positive images (ground truth data), you should provide bicycle images cropped from original images having monotone background on them.
-  Ground truth data example : ![alt tag](https://raw.githubusercontent.com/korujzade/DriveSafe/tree/master/examples/ground_truth.png)
-  Original Image: https://raw.githubusercontent.com/korujzade/DriveSafe/tree/master/examples/original_image.png)
   
   The example image and it's ground truth data are downloaded from the dataset collection provided by Institute of Electrical Measurement
   and Measurement Signal Processing, Graz University of Technology (http://www.emt.tugraz.at/~pinz/data/GRAZ_02/).
